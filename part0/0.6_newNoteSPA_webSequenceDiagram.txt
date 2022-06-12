@@ -1,0 +1,11 @@
+note over browser:
+browser starts executing js-code when the form submit is required
+it prevents the default behavior of the form submit to happen
+preventing that a regular POST request is done like when on classical web site.
+Then it creates a new note, adds it to the notes list
+rerenders the note list on the page, the new note will then appear,
+and sends the new note to the server.
+end note
+
+browser->server: HTTP POST note https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+server-->browser: Status code 201 (note created)
