@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import DailyAnecdote from './components/DailyAnecdote'
+import PopularAnecdote from './components/PopularAnecdote'
 
 const App = () => {
   const anecdotes = [
@@ -13,12 +15,15 @@ const App = () => {
   const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
   const [selected, setSelected] = useState(0)
 
-  const getInt = (maxInt) => Math.floor(Math.random() * maxInt)
+  const maxVotes = Math.max(...votes)
+  const popularAnecdoteIdx = votes.indexOf(maxVotes)
+
+  const getRandomInt = (limit) => Math.floor(Math.random() * limit)
   const changeAnecdote = (() => {
     // Prevent using the same anecdote twice in a row
-    let tmp = getInt(anecdotes.length)
+    let tmp = getRandomInt(anecdotes.length)
     while (tmp === selected) {
-      tmp = getInt(anecdotes.length)
+      tmp = getRandomInt(anecdotes.length)
     }
 
     setSelected(tmp)
@@ -32,12 +37,12 @@ const App = () => {
 
   return (
     <>
-      <div>
-        {anecdotes[selected]}
-      </div>
-      <div>has {votes[selected]} vote{votes[selected] < 2 ? '' : 's'}</div>
-      <button onClick={voteForCurrentAnecdote}>vote</button>
-      <button onClick={changeAnecdote}>next anecdote</button>
+      <DailyAnecdote
+        anecdote={anecdotes[selected]}
+        voteNb={votes[selected]}
+        onClickVote={voteForCurrentAnecdote}
+        onClickNext={changeAnecdote} />
+      <PopularAnecdote anecdote={anecdotes[popularAnecdoteIdx]} voteNb={votes[popularAnecdoteIdx]} />
     </>
   )
 }
