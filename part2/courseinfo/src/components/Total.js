@@ -1,9 +1,11 @@
 const Total = ({ parts }) => {
-
+    const exercicesNb = parts.reduce((acc, currentValue) => acc + currentValue.exercises, 0)
     return (
-        <p>Number of exercises {
-            parts.reduce((acc, currentValue) => acc + currentValue.exercises, 0)
-        }</p>
+        <b>
+            Total of {
+                exercicesNb
+            } exercise{exercicesNb <= 1 ? "" : "s"}
+        </b>
     )
 }
 
