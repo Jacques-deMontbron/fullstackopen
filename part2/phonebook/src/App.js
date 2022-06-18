@@ -11,9 +11,15 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault()
 
-    const newPerson = { name: newName }
-    setPersons(persons.concat(newPerson))
-    setNewName("")
+    // Check with case sensitivity
+    if (persons.find((elt) => elt.name.toLowerCase() === newName.toLocaleLowerCase())) {
+      alert(`${newName} is already added to phonebook`)
+    }
+    else {
+      const newPerson = { name: newName }
+      setPersons(persons.concat(newPerson))
+      setNewName("")
+    }
   }
 
   const nameInputChange = (event) => {
