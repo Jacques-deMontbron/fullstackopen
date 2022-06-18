@@ -1,7 +1,7 @@
 const PhonebookForm = ({ onSubmit, onChangeName, nameInputValue, onChangeNumber, numberInputValue }) => {
     return (
         <>
-            <h2>Phonebook</h2>
+            <h2>Add a new entry</h2>
             <form onSubmit={onSubmit}>
                 <div>
                     name: <input
