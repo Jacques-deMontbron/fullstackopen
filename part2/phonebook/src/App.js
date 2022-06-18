@@ -1,18 +1,27 @@
-import { useState } from 'react'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 import NumbersList from './Components/NumbersList'
 import PhonebookForm from './Components/PhonebookForm'
 import SearchInput from './Components/SearchInput'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ])
+
+  // States
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchValue, setSearchValue] = useState('')
+
+  // Recover the db first and set the persons
+  const dbName = "persons"
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3001/${dbName}`)
+      .then(response => {
+        console.log(`${dbName} db recovered`)
+        setPersons(response.data)
+      })
+  }, [])
 
   const addEntry = (event) => {
     event.preventDefault()
@@ -23,7 +32,7 @@ const App = () => {
     }
     // // Test if we have a number in the number input
     // else if (/^(\d+(\-|\s+)?)+$/.test(newNumber) === false) {
-    //   alert(`${newNumber} doesn't seem to be a number`)
+    //   alert(`${ newNumber } doesn't seem to be a number`)
     // }
     else {
       const newPerson = { name: newName, number: newNumber }
