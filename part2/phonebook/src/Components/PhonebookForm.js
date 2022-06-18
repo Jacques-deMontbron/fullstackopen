@@ -1,18 +1,23 @@
-const PhonebookForm = ({ onChange, onSubmit, inputValue }) => {
+const PhonebookForm = ({ onSubmit, onChangeName, nameInputValue, onChangeNumber, numberInputValue }) => {
     return (
         <>
             <h2>Phonebook</h2>
             <form onSubmit={onSubmit}>
                 <div>
                     name: <input
-                        value={inputValue}
-                        onChange={onChange}
+                        value={nameInputValue}
+                        onChange={onChangeName}
+                    />
+                </div>
+                <div>
+                    number: <input
+                        value={numberInputValue}
+                        onChange={onChangeNumber}
                     />
                 </div>
                 <div>
                     <button type="submit">add</button>
                 </div>
-                <div>debug: {inputValue}</div>
             </form>
         </>
     )
