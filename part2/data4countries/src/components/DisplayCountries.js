@@ -1,9 +1,11 @@
 import DisplayCountryDetails from "./DisplayCountryDetails"
 import DisplayTenCountries from "./DisplayTenCountries"
 
-const DisplayCountries = ({ countries, searchFilter }) => {
+const DisplayCountries = ({ countries, searchFilter, onClickShow }) => {
+
     if (!searchFilter)
         return
+
 
     if (countries.length === 1) {
         //console.log("countries.length === 1:", countries)
@@ -12,7 +14,7 @@ const DisplayCountries = ({ countries, searchFilter }) => {
         )
     } else if (countries.length > 1 && countries.length <= 10) {
         // console.log("1 < countries.length < 10:", countries)
-        return <DisplayTenCountries countries={countries} />
+        return <DisplayTenCountries countries={countries} onClickShow={onClickShow} />
     }
     else if (countries.length > 10) {
         // console.log("countries.length > 10:", countries)
