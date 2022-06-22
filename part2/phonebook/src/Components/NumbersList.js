@@ -12,6 +12,8 @@ const NumbersList = ({ persons, searchFilter }) => {
                                 <li key={person.name}>{person.name} {person.number}</li>
                             )
                         }
+                        else
+                            return
                     }
                     else {
                         return (

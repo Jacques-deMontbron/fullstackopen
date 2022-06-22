@@ -29,17 +29,24 @@ const App = () => {
     // Check with case sensitivity
     if (persons.find((elt) => elt.name.toLowerCase() === newName.toLocaleLowerCase())) {
       alert(`${newName} is already added to phonebook`)
+      return
     }
-    // // Test if we have a number in the number input
-    // else if (/^(\d+(\-|\s+)?)+$/.test(newNumber) === false) {
+    // Test if we have a number in the number input
+    // if (/^(\d+(\-|\s+)?)+$/.test(newNumber) === false) {
     //   alert(`${ newNumber } doesn't seem to be a number`)
+    //   return
     // }
-    else {
-      const newPerson = { name: newName, number: newNumber }
-      setPersons(persons.concat(newPerson))
-      setNewName("")
-      setNewNumber("")
-    }
+
+    const newPerson = { name: newName, number: newNumber }
+
+    axios
+      .post('http://localhost:3001/persons', newPerson)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setNewName("")
+        setNewNumber("")
+      })
+
   }
 
   const nameInputChange = (event) => setNewName(event.target.value)
