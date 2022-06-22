@@ -1,8 +1,9 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import NumbersList from './Components/NumbersList'
-import PhonebookForm from './Components/PhonebookForm'
-import SearchInput from './Components/SearchInput'
+import NumbersList from './components/NumbersList'
+import PhonebookForm from './components/PhonebookForm'
+import SearchInput from './components/SearchInput'
+import personsService from './services/persons'
 
 const App = () => {
 
@@ -15,8 +16,8 @@ const App = () => {
   // Recover the db first and set the persons
   const dbName = "persons"
   useEffect(() => {
-    axios
-      .get(`http://localhost:3001/${dbName}`)
+    personsService
+      .getAll()
       .then(response => {
         console.log(`${dbName} db recovered`)
         setPersons(response.data)
@@ -39,8 +40,8 @@ const App = () => {
 
     const newPerson = { name: newName, number: newNumber }
 
-    axios
-      .post('http://localhost:3001/persons', newPerson)
+    personsService
+      .create(newPerson)
       .then(response => {
         setPersons(persons.concat(response.data))
         setNewName("")
