@@ -18,9 +18,9 @@ const App = () => {
   useEffect(() => {
     personsService
       .getAll()
-      .then(response => {
+      .then(data => {
         console.log(`${dbName} db recovered`)
-        setPersons(response.data)
+        setPersons(data)
       })
   }, [])
 
@@ -42,18 +42,30 @@ const App = () => {
 
     personsService
       .create(newPerson)
-      .then(response => {
-        setPersons(persons.concat(response.data))
+      .then(data => {
+        setPersons(persons.concat(data))
         setNewName("")
         setNewNumber("")
       })
+  }
 
+  const deleteEntry = (id) => {
+    return () => {
+      const concernedPerson = persons.find(person => person.id === id)
+      if (!window.confirm(`Delete ${concernedPerson.name} ?`))
+        return
+
+      personsService
+        .delete(id)
+        .then(response => {
+          console.log(`Entry of id #${id} deleted`)
+          setPersons(persons.filter(person => person.id !== id))
+        })
+    }
   }
 
   const nameInputChange = (event) => setNewName(event.target.value)
-
   const numberInputChange = (event) => setNewNumber(event.target.value)
-
   const searchInputChange = (event) => setSearchValue(event.target.value)
 
   return (
@@ -70,7 +82,7 @@ const App = () => {
         onChangeNumber={numberInputChange}
         numberInputValue={newNumber}
       />
-      <NumbersList persons={persons} searchFilter={searchValue} />
+      <NumbersList persons={persons} searchFilter={searchValue} deleteEntry={deleteEntry} />
     </div>
   )
 }

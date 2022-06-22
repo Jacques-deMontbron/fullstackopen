@@ -1,4 +1,6 @@
-const NumbersList = ({ persons, searchFilter }) => {
+import "../styles/NumbersList.css"
+
+const NumbersList = ({ persons, searchFilter, deleteEntry }) => {
     return (
         <>
             <h2>Numbers</h2>
@@ -9,7 +11,10 @@ const NumbersList = ({ persons, searchFilter }) => {
                         if (person.name.toLowerCase().includes(lcSearchFilter) ||
                             person.number.toLowerCase().includes(lcSearchFilter)) {
                             return (
-                                <li key={person.name}>{person.name} {person.number}</li>
+                                <li key={person.name}>
+                                    {person.name} {person.number}
+                                    <button onClick={`deleteEntry(${person.id})`}>Delete</button>
+                                </li>
                             )
                         }
                         else
@@ -17,7 +22,10 @@ const NumbersList = ({ persons, searchFilter }) => {
                     }
                     else {
                         return (
-                            <li key={person.name}>{person.name} {person.number}</li>
+                            <li key={person.id}>
+                                {person.name} {person.number}
+                                <button onClick={deleteEntry(person.id)}>Delete</button>
+                            </li>
                         )
                     }
                 })}
