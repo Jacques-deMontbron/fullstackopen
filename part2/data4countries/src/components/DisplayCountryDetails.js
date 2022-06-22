@@ -1,25 +1,23 @@
-const DisplayCountryDetails = ({ country }) => {
-    if (false) {
-        return <p> 1 country found: {country.name.common}</p>
-    }
+import DisplayCapitalWeather from "./DisplayCapitalWeather"
+import DisplayCountryGenerics from "./DisplayCountryGenerics"
 
+const DisplayCountryDetails = ({ country }) => {
     return (
         <>
-            <h1>{country.name.common}</h1>
-            <p>
-                capital: {country.capital[0]}<br />
-                area: {country.area}
-            </p>
-            <h3>Languages</h3>
-            <ul>
-                {Object.entries(country.languages)
-                    .map(([key, language]) => <li key={key}>{language}</li>)}
-            </ul>
-            <div>
-                <img src={country.flags.png} alt={`flag of ${country.name.common}`} />
-            </div>
+            <DisplayCountryGenerics
+                countryName={country.name.common}
+                capitalName={country.capital[0]}
+                area={country.area}
+                languages={country.languages}
+                flag={country.flags.png}
+            />
+            <DisplayCapitalWeather
+                capitalName={country.capital[0]}
+                capitalLatLng={country.capitalInfo.latlng}
+            />
         </>
     )
+    // }
 }
 
 export default DisplayCountryDetails
