@@ -28,9 +28,10 @@ const App = () => {
     event.preventDefault()
 
     // Check with case sensitivity
-    if (persons.find((elt) => elt.name.toLowerCase() === newName.toLocaleLowerCase())) {
-      alert(`${newName} is already added to phonebook`)
-      return
+    const registeredPerson = persons.find((elt) => elt.name.toLowerCase() === newName.toLocaleLowerCase())
+    if (registeredPerson) {
+      if (!window.confirm(`${registeredPerson.name} is already added to the Phonebook. Replace the old number with a new one ?`))
+        return
     }
     // Test if we have a number in the number input
     // if (/^(\d+(\-|\s+)?)+$/.test(newNumber) === false) {
@@ -40,13 +41,24 @@ const App = () => {
 
     const newPerson = { name: newName, number: newNumber }
 
-    personsService
-      .create(newPerson)
-      .then(data => {
-        setPersons(persons.concat(data))
-        setNewName("")
-        setNewNumber("")
-      })
+    if (!registeredPerson) {
+      personsService
+        .create(newPerson)
+        .then(data => {
+          setPersons(persons.concat(data))
+          setNewName("")
+          setNewNumber("")
+        })
+    }
+    else {
+      personsService
+        .update(registeredPerson.id, newPerson)
+        .then(data => {
+          setPersons(persons.map(person => person.id === data.id ? data : person))
+          setNewName("")
+          setNewNumber("")
+        })
+    }
   }
 
   const deleteEntry = (id) => {
