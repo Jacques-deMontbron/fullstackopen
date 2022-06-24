@@ -1,10 +1,12 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import Notification from './components/Notification'
 import NumbersList from './components/NumbersList'
 import PhonebookForm from './components/PhonebookForm'
 import SearchInput from './components/SearchInput'
 import personsService from './services/persons'
 
+let currentTimeOutID = null; // To prevent that a notification timeout overlap a new one
 const App = () => {
 
   // States
@@ -12,6 +14,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchValue, setSearchValue] = useState('')
+  const [notification, setNotification] = useState(null)
+
 
   // Recover the db first and set the persons
   const dbName = "persons"
@@ -46,8 +50,18 @@ const App = () => {
         .create(newPerson)
         .then(data => {
           setPersons(persons.concat(data))
+          setNotification(
+            `Added ${newPerson.name} with number ${newPerson.number}`
+          )
           setNewName("")
           setNewNumber("")
+
+          if (currentTimeOutID)
+            clearTimeout(currentTimeOutID)
+          currentTimeOutID = setTimeout(() => {
+            setNotification(null)
+            currentTimeOutID = null;
+          }, 5000)
         })
     }
     else {
@@ -55,9 +69,22 @@ const App = () => {
         .update(registeredPerson.id, newPerson)
         .then(data => {
           setPersons(persons.map(person => person.id === data.id ? data : person))
+          setNotification(
+            `Updated ${newPerson.name} with number ${newPerson.number}`
+          )
           setNewName("")
           setNewNumber("")
+
+          if (currentTimeOutID)
+            clearTimeout(currentTimeOutID)
+          currentTimeOutID =
+            setTimeout(() => {
+              setNotification(null)
+              currentTimeOutID = null
+            }, 5000)
+
         })
+
     }
   }
 
@@ -72,6 +99,16 @@ const App = () => {
         .then(response => {
           console.log(`Entry of id #${id} deleted`)
           setPersons(persons.filter(person => person.id !== id))
+          setNotification(
+            `Deleted ${concernedPerson.name} with number ${concernedPerson.number}`
+          )
+
+          if (currentTimeOutID)
+            clearTimeout(currentTimeOutID)
+          currentTimeOutID = setTimeout(() => {
+            setNotification(null)
+            currentTimeOutID = null
+          }, 5000)
         })
     }
   }
@@ -83,6 +120,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification notification={notification} />
       <SearchInput
         searchInputValue={searchValue}
         onChangeSearch={searchInputChange}
