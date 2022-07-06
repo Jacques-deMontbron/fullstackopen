@@ -6,7 +6,8 @@ import PhonebookForm from './components/PhonebookForm'
 import SearchInput from './components/SearchInput'
 import personsService from './services/persons'
 
-let currentTimeOutID = null; // To prevent that a notification timeout overlap a new one
+let currentErrorTimeOutID = null; // To prevent that an error timeout overlap a new one
+let currentInfoTimeOutID = null; // To prevent that a notification timeout overlap a new one
 const App = () => {
 
   // States
@@ -15,6 +16,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [searchValue, setSearchValue] = useState('')
   const [notification, setNotification] = useState(null)
+  const [error, setError] = useState(null)
 
 
   // Recover the db first and set the persons
@@ -56,11 +58,11 @@ const App = () => {
           setNewName("")
           setNewNumber("")
 
-          if (currentTimeOutID)
-            clearTimeout(currentTimeOutID)
-          currentTimeOutID = setTimeout(() => {
+          if (currentInfoTimeOutID)
+            clearTimeout(currentInfoTimeOutID)
+          currentInfoTimeOutID = setTimeout(() => {
             setNotification(null)
-            currentTimeOutID = null;
+            currentInfoTimeOutID = null;
           }, 5000)
         })
     }
@@ -75,12 +77,12 @@ const App = () => {
           setNewName("")
           setNewNumber("")
 
-          if (currentTimeOutID)
-            clearTimeout(currentTimeOutID)
-          currentTimeOutID =
+          if (currentInfoTimeOutID)
+            clearTimeout(currentInfoTimeOutID)
+          currentInfoTimeOutID =
             setTimeout(() => {
               setNotification(null)
-              currentTimeOutID = null
+              currentInfoTimeOutID = null
             }, 5000)
 
         })
@@ -103,11 +105,22 @@ const App = () => {
             `Deleted ${concernedPerson.name} with number ${concernedPerson.number}`
           )
 
-          if (currentTimeOutID)
-            clearTimeout(currentTimeOutID)
-          currentTimeOutID = setTimeout(() => {
+          if (currentInfoTimeOutID)
+            clearTimeout(currentInfoTimeOutID)
+          currentInfoTimeOutID = setTimeout(() => {
             setNotification(null)
-            currentTimeOutID = null
+            currentInfoTimeOutID = null
+          }, 5000)
+        })
+        .catch(error => {
+          console.error(error)
+          setPersons(persons.filter(person => person.id !== id))
+          setError(`Information of ${concernedPerson.name} has already been removed from the server`)
+          if (currentErrorTimeOutID)
+            clearTimeout(currentErrorTimeOutID)
+          currentErrorTimeOutID = setTimeout(() => {
+            setError(null)
+            currentErrorTimeOutID = null
           }, 5000)
         })
     }
@@ -120,7 +133,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification notification={notification} />
+      <Notification notification={notification} error={error} />
       <SearchInput
         searchInputValue={searchValue}
         onChangeSearch={searchInputChange}

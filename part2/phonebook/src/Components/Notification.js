@@ -1,14 +1,25 @@
 import "../styles/Notification.css"
 
-const Notification = ({ notification }) => {
-    if (notification === null) {
-        return null
-    }
+const Notification = ({ notification, error }) => {
+    if (notification === null && error === null)
+        return
 
-    return (
+    const Info = notification ? () => (
         <div className='notification'>
             {notification}
         </div>
+    ) : () => <></>
+    const Error = error ? () => (
+        <div className='error'>
+            {error}
+        </div>
+    ) : () => <></>;
+
+    return (
+        <>
+            <Info />
+            <Error />
+        </>
     )
 }
 
